@@ -41,7 +41,7 @@ export default new Router({
       name: 'ModifyWord',
       component: ModifyWord,
       meta: {
-        // requireAuth: true
+        requireAuth: true
       }
     },
     {

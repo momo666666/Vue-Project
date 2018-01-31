@@ -1,26 +1,29 @@
-
 <template>
-  <div id="editor">
-    您正在{{ve}}《<span style="font-size: 20px;font-weight: bold;">{{title}}</span>》
-    <!--<div id="editorElem" class="editorStyle" style="min-height: 600px"></div>-->
-    <div id="div1" class="toolbar"></div>
-    <div id="div2" class="text" style="min-height: 670px">
+  <el-row style="margin: 10px 30px;">
+    <el-row style="margin-bottom:10px;">您正在{{ve}}《<span style="font-size: 15px;font-weight: bold;">{{title}}</span>》</el-row>
+    <el-row style="border: 1px solid #ebeef5;box-shadow: 0 2px 12px 0 rgba(25, 22, 22, 0.1);">
+      <div id="div1" class="toolbar"></div>
+      <div id="div2" class="text" style="min-height: 450px">
         <p>请输入内容</p>
       </div>
-    <el-button type="primary" v-on:click="open1" v-if=this.editable>提交<i class="el-icon-upload el-icon--right"></i></el-button>
-    <el-button type="primary" icon="el-icon-delete" v-on:click="open2" v-if=this.editable>删除</el-button>
-    <el-button type="primary" icon="el-icon-document" v-on:click="viewModifyHistory" >查看历史修改</el-button>
-  </div>
+    </el-row>
+    <el-row class="button_right">
+      <el-button type="primary" icon="el-icon-upload el-icon--right" v-on:click="open1" v-if=this.editable>提交</el-button>
+      <el-button type="primary" icon="el-icon-delete" v-on:click="open2" v-if=this.editable>删除</el-button>
+      <el-button type="primary" icon="el-icon-document" v-on:click="viewModifyHistory">查看历史修改</el-button>
+    </el-row>
+  </el-row>
 </template>
 
 <script>
   // import bus from '../utils/eventBus'
   import E from 'wangeditor'
   import editorApi from '../api/editor/word'
-  import { getStore } from '../utils/localStorage'
+  import {getStore} from '../utils/localStorage'
   import router from '../router'
-
+  import ElRow from 'element-ui/packages/row/src/row'
   export default {
+    components: {ElRow},
     name: 'editor',
     data () {
       return {
@@ -97,7 +100,8 @@
           console.log(r.status)
           console.log(r.data)
           this.editorContent = ''
-          this.editorContent = r.data.word
+          this.editorContent = r.data.object.word
+          console.log(`文章内容为：` + this.editorContent)
         }).catch(res => {
           console.log('请求文章内容失败')
           console.log(res.status)
@@ -113,7 +117,10 @@
           if (r.data.code === 700) {
             this.$message({
               type: 'success',
-              message: '修改成功'
+              message: '删除成功'
+            })
+            router.push({
+              path: '/homepage'
             })
           }
         }).catch(res => {
@@ -126,7 +133,7 @@
         router.push({     // 在路由中带参数传值,将wordid的值传入ModifyWord.vue
           path: 'modifyWord',
           query: {
-            wordid: this.word_id,
+            word_id: this.word_id,
             title: this.title
           }
         })
@@ -141,8 +148,11 @@
               message: '提交成功！',
               type: 'success'
             })
-            this.askWordInfo()  // 请求最新正文信息
+            // this.askWordInfo()  // 请求最新正文信息
           }
+          router.push({
+            path: '/homepage'
+          })
         }).catch(res => {
           console.log('上传失败')
           console.log(res.status)
@@ -159,7 +169,7 @@
       }
       console.log(this.$route.query)
       this.editorContent = this.$route.query.word
-      this.word_id = this.$route.query.wordid
+      this.word_id = this.$route.query.word_id
       this.title = this.$route.query.title
       this.editable = this.$route.query.editable
       console.log(this.word_id + this.title + this.editable)
@@ -181,4 +191,13 @@
     border: 1px solid #ccc;
     height: 400px;
   }
+  .button_right{
+    float: right;
+    margin-top:10px;
+  }
+  .button_right button{
+    margin-left:20px;
+  }
+
+
 </style>

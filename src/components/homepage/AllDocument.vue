@@ -1,9 +1,9 @@
 <template>
-  <div id="allDocument">
+  <el-row>
     <el-table
       :data="tableData"
       border
-      style="width: 100%">
+      style="width: 100%;">
       <el-table-column
         prop="username"
         label="用户"
@@ -12,20 +12,19 @@
       <el-table-column
         prop="title"
         label="题目"
-        width="150">
+        width="200">
       </el-table-column>
       <el-table-column
         prop="createTime"
-        label="创建时间"
-        width="150">
+        label="创建时间">
       </el-table-column>
       <el-table-column
         prop="updateTime"
-        label="最近修改时间"
-        width="150">
+        label="最近修改时间">
       </el-table-column>
       <el-table-column
-        label="操作">
+        label="操作"
+        width="150">
         <template slot-scope="scope">
           <el-button @click="handleClick(scope.row, false)" type="text" size="small">查看</el-button>
           <el-button type="text" size="small" @click="handleClick(scope.row, true)">编辑</el-button>
@@ -42,7 +41,7 @@
         :total=this.page.totalData>
       </el-pagination>
     </div>
-  </div>
+  </el-row>
 </template>
 
 <script>
@@ -76,7 +75,7 @@
       methods: {
         handleClick (row, editable) {
           console.log(row)
-          let wordId = row.id
+          let word_id = row.id
           let title = row.title
           let wordContent = row.word
           // bus.$emit('word', wordContent) // 绑定一个事件
@@ -84,7 +83,7 @@
             path: 'word',
             query: {
               word: wordContent,
-              wordid: wordId,
+              word_id: word_id,
               title: title,
               editable: editable
             }
@@ -146,5 +145,7 @@
 </script>
 
 <style scoped>
-
+  .block{
+    margin: 0 30%;
+  }
 </style>

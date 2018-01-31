@@ -1,39 +1,53 @@
 <template>
-  <div id="allDocument">
-    您正在查看《<span style="font-size: 20px;font-weight: bold;">{{title}}</span>》的修改历史
-    <el-table
-      :data="tableData"
-      border
-      style="width: 100%">
-      <el-table-column
-        prop="uid"
-        label="用户"
-        width="150">
-      </el-table-column>
-      <el-table-column
-        prop="opTime"
-        label="修改时间"
-        width="150">
-      </el-table-column>
-    </el-table>
-    <div class="block">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :page-sizes="[10, 20, 30, 40]"
-        :page-size="100"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total=this.page.totalData>
-      </el-pagination>
-    </div>
-  </div>
+  <el-row style="padding:10px 30px;">
+    <el-row style="margin-bottom: 10px;">
+      <el-col :span="21">
+        您正在查看《<span style="font-size: 20px;font-weight: bold;">{{title}}</span>》的修改历史
+      </el-col>
+      <el-col :span="3">
+        <el-button type="primary" @click="this.backToHomePage"  style="float: left;">回到个人主页</el-button>
+      </el-col>
+    </el-row>
+    <el-row>
+      <el-table
+        :data="tableData"
+        border
+        style="width: 100%">
+        <el-table-column
+          prop="username"
+          label="用户"
+          width="400">
+        </el-table-column>
+        <el-table-column
+          prop="opTime"
+          label="修改时间">
+        </el-table-column>
+      </el-table>
+    </el-row>
+    <el-row>
+      <div class="block">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="100"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total=this.page.totalData>
+        </el-pagination>
+      </div>
+    </el-row>
+
+  </el-row>
 </template>
 
 <script>
   import editorApi from '../api/editor/word'
   import {getStore} from '../utils/localStorage'
   import {getTime} from '../utils/transformTime'
+  import router from '../router'
+  import ElRow from "element-ui/packages/row/src/row";
   export default {
+    components: {ElRow},
     data () {
       return {
         page: {
@@ -85,6 +99,7 @@
           this.tableData = []
           for (var m = 0; m < resData.object[0].length; m++) {
             this.tableData[m] = resData.object[0][m].edit
+            this.tableData[m].username = resData.object[0][m].user.userName
           }
           // 转换opTime的时间戳
           for (var i = 0; i < this.tableData.length; i++) {
@@ -96,10 +111,15 @@
         }).catch(res => {
           console.log(res)
         })
+      },
+      backToHomePage () {
+        router.push({
+          path: '/homepage'
+        })
       }
     },
     mounted () {
-      this.word_id = this.$route.query.wordid   // 接收到word.vue传过来的wordId
+      this.word_id = this.$route.query.word_id   // 接收到word.vue传过来的wordId
       this.title = this.$route.query.title      // 接收到word.vue传过来的title
       console.log(this.word_id)
       this.getOpLog()
@@ -108,5 +128,7 @@
 </script>
 
 <style scoped>
-
+  .block{
+    margin: 10px 30%;
+  }
 </style>

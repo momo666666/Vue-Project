@@ -1,29 +1,26 @@
 <template>
-  <div id="MyDocu">
+  <el-row>
     <el-table
       :data="tableData"
       border
       style="width: 100%">
       <el-table-column
         prop="title"
-        label="题目"
-        width="150">
+        label="题目">
       </el-table-column>
       <el-table-column
         prop="createTime"
-        label="创建时间"
-        width="150">
+        label="创建时间">
       </el-table-column>
       <el-table-column
         prop="updateTime"
-        label="最近修改时间"
-        width="150">
+        label="最近修改时间">
       </el-table-column>
       <el-table-column
         label="操作">
         <template slot-scope="scope">
-          <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-          <el-button type="text" size="small">编辑</el-button>
+          <el-button @click="handleClick(scope.row, false)" type="text" size="small">查看</el-button>
+          <el-button type="text" size="small" @click="handleClick(scope.row, true)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -37,15 +34,18 @@
         :total=this.page.totalData>
       </el-pagination>
     </div>
-  </div>
+  </el-row>
 </template>
 
 <script>
   import editorApi from '../../api/editor/word'
   import {getStore} from '../../utils/localStorage'
   import {getTime} from '../../utils/transformTime'
+  import ElRow from 'element-ui/packages/row/src/row'
+  import router from '../../router'
   // import router from '../router'
   export default {
+    components: {ElRow},
     name: 'MyDocu',
     data () {
       return {
@@ -68,8 +68,21 @@
       }
     },
     methods: {
-      handleClick (row) {
+      handleClick (row, editable) {
         console.log(row)
+        let word_id = row.id
+        let title = row.title
+        let wordContent = row.word
+        // bus.$emit('word', wordContent) // 绑定一个事件
+        router.push({     // 在路由中带参数传值
+          path: 'word',
+          query: {
+            word: wordContent,
+            word_id: word_id,
+            title: title,
+            editable: editable
+          }
+        })
       },
       handleChange (val) {
         console.log(val)
@@ -129,5 +142,7 @@
 </script>
 
 <style scoped>
-
+  .block{
+    margin: 0 30%;
+  }
 </style>

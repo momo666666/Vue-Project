@@ -8,9 +8,15 @@ import {READ_USER} from '../../../store/mutation-types/user'
 
 // import {getStore} from '../../../utils/localStorage'
 export const beforeH = (to, from, next) => {
+  // if (from.path === '/modifyWord') {
+  //   next({
+  //     path: '/homePage',
+  //     query: {redirect: to.fullPath}
+  //   })
+  // }
   if (to.path === '/') {  // 强制跳转到 '/index'
     next({
-      path: '/index',
+      path: '/login',
       query: {redirect: to.fullPath}
     })
   }
